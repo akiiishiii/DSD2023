@@ -3,7 +3,7 @@
 `timescale 1ns / 1ps
 
 // 可调分频因子的分频器模块
-module divider (
+module divider(
     input clk_in, // 输入时钟
     input rst_, // 复位信号
     input [31:0] div_factor, // 分频因子

@@ -9,14 +9,14 @@ module divider_testbench();
     reg rst_; // 复位信号
 
     // 实例化divider模块
-    divider div_100kHz (
+    divider div_100kHz(
         .clk_in(clk_100MHz),
         .rst_(rst_),
         .div_factor(1000),
         .clk_out(clk_100kHz)
     );
 
-    divider div_1kHz (
+    divider div_1kHz(
         .clk_in(clk_100MHz),
         .rst_(rst_),
         .div_factor(100000),
