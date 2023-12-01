@@ -31,4 +31,5 @@ module DAC0832_driver(
             data_out <= data_in; // 将输入数据传递给DAC0832
         end
     end
+
 endmodule

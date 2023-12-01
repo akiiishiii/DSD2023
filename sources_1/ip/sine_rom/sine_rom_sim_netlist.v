@@ -1,10 +1,10 @@
 // Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2018.3 (win64) Build 2405991 Thu Dec  6 23:38:27 MST 2018
-// Date        : Wed Nov 29 14:56:31 2023
+// Date        : Wed Nov 29 14:56:30 2023
 // Host        : LAPTOP-F6HMT211 running 64-bit major release  (build 9200)
-// Command     : write_verilog -force -mode funcsim {d:/FPGA
-//               Projects/DSD2023/DSD2023.srcs/sources_1/ip/sine_rom/sine_rom_sim_netlist.v}
+// Command     : write_verilog -force -mode funcsim -rename_top sine_rom -prefix
+//               sine_rom_ sine_rom_sim_netlist.v
 // Design      : sine_rom
 // Purpose     : This verilog netlist is a functional simulation representation of the design and should not be modified
 //               or synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -91,7 +91,7 @@ endmodule
 (* C_MEM_INIT_FILE = "sine_rom.mif" *) (* C_MEM_TYPE = "0" *) (* C_PARSER_TYPE = "1" *) 
 (* C_PIPELINE_STAGES = "0" *) (* C_QCE_JOINED = "0" *) (* C_QUALIFY_WE = "0" *) 
 (* C_READ_MIF = "1" *) (* C_REG_A_D_INPUTS = "1" *) (* C_REG_DPRA_INPUT = "0" *) 
-(* C_SYNC_ENABLE = "1" *) (* C_WIDTH = "8" *) (* ORIG_REF_NAME = "dist_mem_gen_v8_0_12" *) 
+(* C_SYNC_ENABLE = "1" *) (* C_WIDTH = "8" *) 
 module sine_rom_dist_mem_gen_v8_0_12
    (a,
     d,
@@ -165,7 +165,6 @@ module sine_rom_dist_mem_gen_v8_0_12
         .qspo(qspo));
 endmodule
 
-(* ORIG_REF_NAME = "dist_mem_gen_v8_0_12_synth" *) 
 module sine_rom_dist_mem_gen_v8_0_12_synth
    (qspo,
     a,
@@ -184,7 +183,6 @@ module sine_rom_dist_mem_gen_v8_0_12_synth
         .qspo(qspo));
 endmodule
 
-(* ORIG_REF_NAME = "rom" *) 
 module sine_rom_rom
    (qspo,
     a,

@@ -1,10 +1,10 @@
 -- Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2018.3 (win64) Build 2405991 Thu Dec  6 23:38:27 MST 2018
--- Date        : Wed Nov 29 14:56:31 2023
+-- Date        : Wed Nov 29 14:56:30 2023
 -- Host        : LAPTOP-F6HMT211 running 64-bit major release  (build 9200)
--- Command     : write_vhdl -force -mode funcsim {d:/FPGA
---               Projects/DSD2023/DSD2023.srcs/sources_1/ip/sine_rom/sine_rom_sim_netlist.vhdl}
+-- Command     : write_vhdl -force -mode funcsim -rename_top sine_rom -prefix
+--               sine_rom_ sine_rom_sim_netlist.vhdl
 -- Design      : sine_rom
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -20,8 +20,6 @@ entity sine_rom_rom is
     a : in STD_LOGIC_VECTOR ( 7 downto 0 );
     clk : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of sine_rom_rom : entity is "rom";
 end sine_rom_rom;
 
 architecture STRUCTURE of sine_rom_rom is
@@ -735,8 +733,6 @@ entity sine_rom_dist_mem_gen_v8_0_12_synth is
     a : in STD_LOGIC_VECTOR ( 7 downto 0 );
     clk : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of sine_rom_dist_mem_gen_v8_0_12_synth : entity is "dist_mem_gen_v8_0_12_synth";
 end sine_rom_dist_mem_gen_v8_0_12_synth;
 
 architecture STRUCTURE of sine_rom_dist_mem_gen_v8_0_12_synth is
@@ -836,8 +832,6 @@ entity sine_rom_dist_mem_gen_v8_0_12 is
   attribute C_SYNC_ENABLE of sine_rom_dist_mem_gen_v8_0_12 : entity is 1;
   attribute C_WIDTH : integer;
   attribute C_WIDTH of sine_rom_dist_mem_gen_v8_0_12 : entity is 8;
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of sine_rom_dist_mem_gen_v8_0_12 : entity is "dist_mem_gen_v8_0_12";
 end sine_rom_dist_mem_gen_v8_0_12;
 
 architecture STRUCTURE of sine_rom_dist_mem_gen_v8_0_12 is

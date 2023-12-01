@@ -1,10 +1,10 @@
 -- Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2018.3 (win64) Build 2405991 Thu Dec  6 23:38:27 MST 2018
--- Date        : Wed Nov 29 14:56:31 2023
+-- Date        : Wed Nov 29 14:56:30 2023
 -- Host        : LAPTOP-F6HMT211 running 64-bit major release  (build 9200)
--- Command     : write_vhdl -force -mode synth_stub {d:/FPGA
---               Projects/DSD2023/DSD2023.srcs/sources_1/ip/sine_rom/sine_rom_stub.vhdl}
+-- Command     : write_vhdl -force -mode synth_stub -rename_top sine_rom -prefix
+--               sine_rom_ sine_rom_stub.vhdl
 -- Design      : sine_rom
 -- Purpose     : Stub declaration of top-level module interface
 -- Device      : xc7a35tcsg324-1

@@ -3,8 +3,8 @@
 // Tool Version: Vivado v.2018.3 (win64) Build 2405991 Thu Dec  6 23:38:27 MST 2018
 // Date        : Wed Nov 29 16:05:17 2023
 // Host        : LAPTOP-F6HMT211 running 64-bit major release  (build 9200)
-// Command     : write_verilog -force -mode synth_stub {d:/FPGA
-//               Projects/DSD2023/DSD2023.srcs/sources_1/ip/square_rom/square_rom_stub.v}
+// Command     : write_verilog -force -mode synth_stub -rename_top square_rom -prefix
+//               square_rom_ square_rom_stub.v
 // Design      : square_rom
 // Purpose     : Stub declaration of top-level module interface
 // Device      : xc7a35tcsg324-1

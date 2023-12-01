@@ -16,7 +16,7 @@ module divider(
         if (!rst_) begin
             clk_out = 0; // 复位输出时钟
             counter = 0; // 复位计数器
-        end else if (counter == div_factor - 1) begin
+        end else if (counter == div_factor[31:1] - 1) begin
             clk_out = ~clk_out; // 切换输出时钟状态
             counter = 0; // 重置计数器
         end else begin

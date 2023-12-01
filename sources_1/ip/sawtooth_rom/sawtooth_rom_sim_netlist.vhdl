@@ -3,8 +3,8 @@
 -- Tool Version: Vivado v.2018.3 (win64) Build 2405991 Thu Dec  6 23:38:27 MST 2018
 -- Date        : Wed Nov 29 16:05:49 2023
 -- Host        : LAPTOP-F6HMT211 running 64-bit major release  (build 9200)
--- Command     : write_vhdl -force -mode funcsim {d:/FPGA
---               Projects/DSD2023/DSD2023.srcs/sources_1/ip/sawtooth_rom/sawtooth_rom_sim_netlist.vhdl}
+-- Command     : write_vhdl -force -mode funcsim -rename_top sawtooth_rom -prefix
+--               sawtooth_rom_ sawtooth_rom_sim_netlist.vhdl
 -- Design      : sawtooth_rom
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -20,8 +20,6 @@ entity sawtooth_rom_rom is
     a : in STD_LOGIC_VECTOR ( 7 downto 0 );
     clk : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of sawtooth_rom_rom : entity is "rom";
 end sawtooth_rom_rom;
 
 architecture STRUCTURE of sawtooth_rom_rom is
@@ -388,8 +386,6 @@ entity sawtooth_rom_dist_mem_gen_v8_0_12_synth is
     a : in STD_LOGIC_VECTOR ( 7 downto 0 );
     clk : in STD_LOGIC
   );
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of sawtooth_rom_dist_mem_gen_v8_0_12_synth : entity is "dist_mem_gen_v8_0_12_synth";
 end sawtooth_rom_dist_mem_gen_v8_0_12_synth;
 
 architecture STRUCTURE of sawtooth_rom_dist_mem_gen_v8_0_12_synth is
@@ -489,8 +485,6 @@ entity sawtooth_rom_dist_mem_gen_v8_0_12 is
   attribute C_SYNC_ENABLE of sawtooth_rom_dist_mem_gen_v8_0_12 : entity is 1;
   attribute C_WIDTH : integer;
   attribute C_WIDTH of sawtooth_rom_dist_mem_gen_v8_0_12 : entity is 8;
-  attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of sawtooth_rom_dist_mem_gen_v8_0_12 : entity is "dist_mem_gen_v8_0_12";
 end sawtooth_rom_dist_mem_gen_v8_0_12;
 
 architecture STRUCTURE of sawtooth_rom_dist_mem_gen_v8_0_12 is
