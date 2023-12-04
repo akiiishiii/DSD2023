@@ -13,6 +13,7 @@ module implementation_module(
     output [7:0] seg1,
     output [3:0] an2,
     output [7:0] seg2,
+    output reg [15:0] led,
     output ile,
     output cs_,
     output wr1_,
@@ -21,8 +22,9 @@ module implementation_module(
     output [7:0] dac_data
     );
 
-    wire clk_1kHz; // 1kHz时钟信号
     wire clk_100kHz; // 100kHz时钟信号
+    wire clk_1kHz; // 1kHz时钟信号
+    wire gate_1Hz; // 门控信号
 
     wire [7:0] wave; // 波输出
     reg [3:0] num0, num1, num2, num3, num4, num5, num6, num7; // 数字输出 0为低位 7为高位
@@ -41,8 +43,12 @@ module implementation_module(
     wire [3:0] fnum0, fnum1, fnum2, fnum3, fnum4, fnum5, fnum6, fnum7; // 理论频率数字 0为低位 7为高位
     wire [7:0] fen; // 理论频率数显使能
 
+    wire [31:0] freq_real; // 实际频率
+    wire [3:0] rnum0, rnum1, rnum2, rnum3, rnum4, rnum5, rnum6, rnum7; // 实际频率数字 0为低位 7为高位
+    wire [7:0] ren; // 实际频率数显使能
+
     // 左右按钮控制模式选择
-    always @(posedge clk_100kHz or negedge rst_) begin
+    always @(posedge clk_100kHz or negedge rst_ ) begin
         if (!rst_) begin
             mode <= 0; // 复位时，模式选择为0
             last_h_pb_state <= 2'b0; // 复位时，上一次的左右按钮状态为0
@@ -59,7 +65,7 @@ module implementation_module(
     end
 
     // 上下按钮控制频率控制字
-    always @(posedge clk_100kHz or negedge rst_) begin
+    always @(posedge clk_100kHz or negedge rst_ ) begin
         if (!rst_) begin
             freq_ctrl <= 8'd1; // 复位时，频率控制字为1
             last_v_pb_state <= 2'b0; // 复位时，上一次的上下按钮状态为0
@@ -82,7 +88,7 @@ module implementation_module(
     end
 
     // mode控制数码管显示内容：0为学号显示，1为频率控制字显示，2为理论频率显示，3为实际频率显示
-    always @(posedge clk_100kHz or negedge rst_) begin
+    always @(posedge clk_100kHz or negedge rst_ ) begin
         if (!rst_) begin
             num0 <= 4'd0;
             num1 <= 4'd0;
@@ -96,7 +102,9 @@ module implementation_module(
             en2 <= 4'b0000;
             dp1 <= 4'b0000;
             dp2 <= 4'b0000;
+            led <= 16'd0;
         end else begin
+            led <= 16'd0;
             case (mode)
                 'd0: begin
                     num0 <= 4'h3;
@@ -141,18 +149,19 @@ module implementation_module(
                     dp2 <= 4'b0000;
                 end
                 'd3: begin
-                    num0 <= 4'he;
-                    num1 <= 4'he;
-                    num2 <= 4'he;
-                    num3 <= 4'he;
-                    num4 <= 4'he;
-                    num5 <= 4'he;
-                    num6 <= 4'he;
-                    num7 <= 4'he;
-                    en1 <= 4'b1111;
-                    en2 <= 4'b1111;
+                    num0 <= rnum0;
+                    num1 <= rnum1;
+                    num2 <= rnum2;
+                    num3 <= rnum3;
+                    num4 <= rnum4;
+                    num5 <= rnum5;
+                    num6 <= rnum6;
+                    num7 <= rnum7;
+                    en1 <= ren[3:0];
+                    en2 <= ren[7:4];
                     dp1 <= 4'b0000;
                     dp2 <= 4'b0000;
+                    led[15] <= gate_1Hz;
                 end
                 default : begin
                     num0 <= 4'd0;
@@ -169,9 +178,16 @@ module implementation_module(
                     dp2 <= 4'b0000;
                 end
             endcase
+            led[mode] <= 1'b1;
         end
     end
 
+    divider div_100kHz(
+        .clk_in(clk),
+        .rst_(rst_),
+        .div_factor(1000),
+        .clk_out(clk_100kHz)
+    );
 
     divider div_1kHz(
         .clk_in(clk),
@@ -180,11 +196,11 @@ module implementation_module(
         .clk_out(clk_1kHz)
     );
 
-    divider div_100kHz(
+    divider div_1Hz(
         .clk_in(clk),
         .rst_(rst_),
-        .div_factor(1000),
-        .clk_out(clk_100kHz)
+        .div_factor(100000000),
+        .clk_out(gate_1Hz)
     );
 
     segment_display segmentl(
@@ -240,6 +256,14 @@ module implementation_module(
         .freq_theory(freq_theory)
     );
 
+    freq_measure freq_measure(
+        .clk_100kHz(clk_100kHz),
+        .rst_(rst_),
+        .gate(gate_1Hz),
+        .wave(wave),
+        .freq_real(freq_real)
+    );
+
     bin_to_bcd freq_ctrl_bcd(
         .clk_100kHz(clk_100kHz),
         .rst_(rst_),
@@ -268,6 +292,21 @@ module implementation_module(
         .bcd6(fnum6),
         .bcd7(fnum7),
         .en(fen)
+    );
+
+    bin_to_bcd freq_measure_bcd(
+        .clk_100kHz(clk_100kHz),
+        .rst_(rst_),
+        .bin(freq_real),
+        .bcd0(rnum0),
+        .bcd1(rnum1),
+        .bcd2(rnum2),
+        .bcd3(rnum3),
+        .bcd4(rnum4),
+        .bcd5(rnum5),
+        .bcd6(rnum6),
+        .bcd7(rnum7),
+        .en(ren)
     );
 
 endmodule
