@@ -93,6 +93,9 @@ set_property IOSTANDARD LVCMOS33 [get_ports {v_pb[0]}]
 set_property PACKAGE_PIN U4 [get_ports {v_pb[0]}]
 set_property PACKAGE_PIN R17 [get_ports {v_pb[1]}]
 
+set_property IOSTANDARD LVCMOS33 [get_ports {c_pb}]
+set_property PACKAGE_PIN R15 [get_ports {c_pb}]
+
 set_property IOSTANDARD LVCMOS33 [get_ports {led[0]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {led[1]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {led[2]}]

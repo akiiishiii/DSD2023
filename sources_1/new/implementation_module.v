@@ -9,6 +9,7 @@ module implementation_module(
     input [1:0] sw,
     input [1:0] h_pb,
     input [1:0] v_pb,
+    input c_pb,
     output [3:0] an1,
     output [7:0] seg1,
     output [3:0] an2,
@@ -38,8 +39,12 @@ module implementation_module(
     reg [3:0] dp1, dp2; // 小数点输出
 
     integer mode = 0; // 模式选择
-    reg [1:0] last_h_pb_state; // 上一次的左右按钮状态
-    reg [1:0] last_v_pb_state; // 上一次的上下按钮状态
+    wire [1:0] dh_pb; // 消抖后的左右按钮
+    wire [1:0] dv_pb; // 消抖后的上下按钮
+    wire dc_pb; // 消抖后的归一按钮
+    reg [1:0] last_h_pb_state; // 上一时钟周期的左右按钮状态
+    reg [1:0] last_v_pb_state; // 上一时钟周期的上下按钮状态
+    reg last_c_pb_state; // 上一时钟周期的归一按钮状态
 
     reg [7:0] freq_ctrl = 8'd1; // 频率控制字
     wire [3:0] cnum0, cnum1, cnum2, cnum3, cnum4, cnum5, cnum6, cnum7; // 频率控制字数字 0为低位 7为高位
@@ -62,14 +67,14 @@ module implementation_module(
             mode <= 0; // 复位时，模式选择为0
             last_h_pb_state <= 2'b0; // 复位时，上一次的左右按钮状态为0
         end else begin
-            if (h_pb[1] == 1'b1 && last_h_pb_state[1] == 1'b0 && mode < 3) begin
+            if (dh_pb[1] == 1'b1 && last_h_pb_state[1] == 1'b0 && mode < 3) begin
                 mode <= mode + 1;
-            end else if (h_pb[0] == 1'b1 && last_h_pb_state[0] == 1'b0 && mode > 0) begin
+            end else if (dh_pb[0] == 1'b1 && last_h_pb_state[0] == 1'b0 && mode > 0) begin
                 mode <= mode - 1;
             end else begin
                 mode <= mode;
             end
-            last_h_pb_state <= h_pb; // 更新上一次的左右按钮状态
+            last_h_pb_state <= dh_pb; // 更新上一次的左右按钮状态
         end
     end
 
@@ -78,21 +83,25 @@ module implementation_module(
         if (!rst_) begin
             freq_ctrl <= 8'd1; // 复位时，频率控制字为1
             last_v_pb_state <= 2'b0; // 复位时，上一次的上下按钮状态为0
+            last_c_pb_state <= 1'b0; // 复位时，上一次的归一按钮状态为0
         end else begin
-            if (v_pb[0] == 1'b1 && last_v_pb_state[0] == 1'b0) begin
+            if (dc_pb == 1'b1 && last_c_pb_state == 1'b0) begin
+                freq_ctrl <= 8'd1;
+            end else if (dv_pb[0] == 1'b1 && last_v_pb_state[0] == 1'b0) begin
                 if (freq_ctrl == 8'd128) begin
                     freq_ctrl <= 8'd1;
                 end else begin
                     freq_ctrl <= freq_ctrl + 8'd1;
                 end
-            end else if (v_pb[1] == 1'b1 && last_v_pb_state[1] == 1'b0) begin
+            end else if (dv_pb[1] == 1'b1 && last_v_pb_state[1] == 1'b0) begin
                 if (freq_ctrl == 8'd1) begin
                     freq_ctrl <= 8'd128;
                 end else begin
                     freq_ctrl <= freq_ctrl - 8'd1;
                 end
             end
-            last_v_pb_state <= v_pb; // 更新上一次的上下按钮状态
+            last_v_pb_state <= dv_pb; // 更新上一次的上下按钮状态
+            last_c_pb_state <= dc_pb; // 更新上一次的归一按钮状态
         end
     end
 
@@ -243,6 +252,41 @@ module implementation_module(
         .dpin(dp2),
         .an(an2),
         .seg(seg2)
+    );
+
+    debounce h_pb0_debounce(
+        .clk_100kHz(clk_100kHz),
+        .rst_(rst_),
+        .key_in(h_pb[0]),
+        .key_out(dh_pb[0])
+    );
+
+    debounce h_pb1_debounce(
+        .clk_100kHz(clk_100kHz),
+        .rst_(rst_),
+        .key_in(h_pb[1]),
+        .key_out(dh_pb[1])
+    );
+
+    debounce v_pb0_debounce(
+        .clk_100kHz(clk_100kHz),
+        .rst_(rst_),
+        .key_in(v_pb[0]),
+        .key_out(dv_pb[0])
+    );
+
+    debounce v_pb1_debounce(
+        .clk_100kHz(clk_100kHz),
+        .rst_(rst_),
+        .key_in(v_pb[1]),
+        .key_out(dv_pb[1])
+    );
+
+    debounce c_pb_debounce(
+        .clk_100kHz(clk_100kHz),
+        .rst_(rst_),
+        .key_in(c_pb),
+        .key_out(dc_pb)
     );
 
     wave_generator wave_gen(
