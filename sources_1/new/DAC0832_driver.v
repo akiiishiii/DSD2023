@@ -2,6 +2,7 @@
 
 `timescale 1ns / 1ps
 
+// DAC0832驱动模块
 module DAC0832_driver(
     input clk, // 时钟信号
     input rst_, // 复位信号

@@ -19,12 +19,18 @@ module implementation_module(
     output wr1_,
     output wr2_,
     output xfer_,
-    output [7:0] dac_data
+    output [7:0] dac_data,
+    output h_sync,
+    output v_sync,
+    output [3:0] vga_r,
+    output [3:0] vga_g,
+    output [3:0] vga_b
     );
 
     wire clk_100kHz; // 100kHz时钟信号
     wire clk_1kHz; // 1kHz时钟信号
     wire gate_1Hz; // 门控信号
+    wire vga_clk; // VGA时钟信号
 
     wire [7:0] wave; // 波输出
     reg [3:0] num0, num1, num2, num3, num4, num5, num6, num7; // 数字输出 0为低位 7为高位
@@ -35,7 +41,7 @@ module implementation_module(
     reg [1:0] last_h_pb_state; // 上一次的左右按钮状态
     reg [1:0] last_v_pb_state; // 上一次的上下按钮状态
 
-    reg [8:0] freq_ctrl = 8'd1; // 频率控制字
+    reg [7:0] freq_ctrl = 8'd1; // 频率控制字
     wire [3:0] cnum0, cnum1, cnum2, cnum3, cnum4, cnum5, cnum6, cnum7; // 频率控制字数字 0为低位 7为高位
     wire [7:0] cen; // 频率控制字数显使能
 
@@ -46,6 +52,9 @@ module implementation_module(
     wire [31:0] freq_real; // 实际频率
     wire [3:0] rnum0, rnum1, rnum2, rnum3, rnum4, rnum5, rnum6, rnum7; // 实际频率数字 0为低位 7为高位
     wire [7:0] ren; // 实际频率数显使能
+
+    wire [9:0] vga_h_pos, vga_v_pos; // VGA像素位置
+    wire [11:0] rgb_data; // VGA像素数据
 
     // 左右按钮控制模式选择
     always @(posedge clk_100kHz or negedge rst_ ) begin
@@ -203,6 +212,13 @@ module implementation_module(
         .clk_out(gate_1Hz)
     );
 
+    divider div_vga(
+        .clk_in(clk),
+        .rst_(rst_),
+        .div_factor(4),
+        .clk_out(vga_clk)
+    );
+
     segment_display segmentl(
         .clk_1kHz(clk_1kHz),
         .rst_(rst_),
@@ -307,6 +323,44 @@ module implementation_module(
         .bcd6(rnum6),
         .bcd7(rnum7),
         .en(ren)
+    );
+
+    vga_display vga(
+        .clk_25MHz(vga_clk),
+        .rst_(rst_),
+        .rgb_in(rgb_data),
+        .h_pos(vga_h_pos),
+        .v_pos(vga_v_pos),
+        .h_sync(h_sync),
+        .v_sync(v_sync),
+        .r(vga_r),
+        .g(vga_g),
+        .b(vga_b)
+    );
+
+    vga_control vga_ctrl(
+        .clk_25MHz(vga_clk),
+        .rst_(rst_),
+        .h_pos(vga_h_pos),
+        .v_pos(vga_v_pos),
+        .sw(sw),
+        .ctrl_num0(cnum0),
+        .ctrl_num1(cnum1),
+        .ctrl_num2(cnum2),
+        .cen(cen[7:5]),
+        .freq_t_num0(fnum0),
+        .freq_t_num1(fnum1),
+        .freq_t_num2(fnum2),
+        .freq_t_num3(fnum3),
+        .freq_t_num4(fnum4),
+        .ten(fen[7:3]),
+        .freq_r_num0(rnum0),
+        .freq_r_num1(rnum1),
+        .freq_r_num2(rnum2),
+        .freq_r_num3(rnum3),
+        .freq_r_num4(rnum4),
+        .ren(ren[7:3]),
+        .rgb_out(rgb_data)
     );
 
 endmodule

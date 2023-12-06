@@ -56,10 +56,10 @@ module wave_generator(
             wave_out = 8'd0;
         end else begin
             case (sw)
-                8'd0: wave_out = sine_out;
-                8'd1: wave_out = triangle_out;
-                8'd2: wave_out = square_out;
-                8'd3: wave_out = sawtooth_out;
+                2'd0: wave_out = sine_out;
+                2'd1: wave_out = triangle_out;
+                2'd2: wave_out = square_out;
+                2'd3: wave_out = sawtooth_out;
                 default: wave_out = 8'd0;
             endcase
         end

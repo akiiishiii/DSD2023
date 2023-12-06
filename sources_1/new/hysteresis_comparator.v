@@ -14,9 +14,9 @@ module hysteresis_comparator(
     always @(*) begin
         if (!rst_) begin
             high_threshold_reached <= 0;
-        end else if (wave > 8'd192) begin
+        end else if (wave > 8'd128) begin
             high_threshold_reached <= 1;
-        end else if (wave < 8'd64) begin
+        end else begin
             high_threshold_reached <= 0;
         end
     end
